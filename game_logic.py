@@ -5,6 +5,8 @@ from path_detection import is_blocked
 
 def find_arrow(board, row, col):
     """返回指定棋盘位置的箭头；空格或越界时返回 None。"""
+    if not board or not board[0]:
+        return None
     if not (0 <= row < len(board) and 0 <= col < len(board[0])):
         return None
     return board[row][col]

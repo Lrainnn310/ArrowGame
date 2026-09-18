@@ -3,6 +3,7 @@
 import unittest
 
 from models import Arrow, Direction, GameState
+from game_logic import process_arrow_click
 from state_logic import (
     clone_board,
     has_arrows,
@@ -26,6 +27,14 @@ class TestStateLogic(unittest.TestCase):
 
     def test_zero_mistakes_causes_failure(self):
         self.assertEqual(state_after_blocked_click(0), GameState.FAILED)
+
+    def test_last_blocked_click_can_become_failed(self):
+        board = [[Arrow(0, 0, Direction.RIGHT), Arrow(0, 1, Direction.LEFT)]]
+        mistakes, collided = process_arrow_click(board, 0, 0, 1)
+
+        self.assertTrue(collided)
+        self.assertEqual(mistakes, 0)
+        self.assertEqual(state_after_blocked_click(mistakes), GameState.FAILED)
 
     def test_positive_mistakes_keeps_playing(self):
         self.assertEqual(state_after_blocked_click(1), GameState.PLAYING)

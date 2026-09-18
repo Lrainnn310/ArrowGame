@@ -16,6 +16,9 @@ def is_blocked(board, arrow):
 
     board 是二维列表，空位置使用 None，箭头位置使用 Arrow 对象。
     """
+    if not board or not board[0]:
+        return False
+
     row_step, col_step = DIRECTION_VECTORS[arrow.direction]
     row = arrow.row + row_step
     col = arrow.col + col_step

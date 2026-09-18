@@ -11,6 +11,10 @@ def empty_board(size=5):
 
 
 class TestIsBlocked(unittest.TestCase):
+    def test_empty_board_is_not_blocked(self):
+        arrow = Arrow(0, 0, Direction.UP)
+        self.assertFalse(is_blocked([], arrow))
+
     def test_up_without_obstacle(self):
         board = empty_board()
         arrow = Arrow(3, 2, Direction.UP)

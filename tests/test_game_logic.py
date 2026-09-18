@@ -39,6 +39,20 @@ class TestGameLogic(unittest.TestCase):
         mistakes, collided = process_arrow_click(board, -1, 1, mistakes)
         self.assertEqual((mistakes, collided), (3, False))
 
+    def test_edge_arrow_can_be_removed_without_error(self):
+        arrow = Arrow(0, 0, Direction.UP)
+        board = [[arrow]]
+
+        mistakes, collided = process_arrow_click(board, 0, 0, 3)
+
+        self.assertIsNone(board[0][0])
+        self.assertEqual((mistakes, collided), (3, False))
+
+    def test_empty_board_click_is_safe(self):
+        mistakes, collided = process_arrow_click([], 0, 0, 3)
+
+        self.assertEqual((mistakes, collided), (3, False))
+
 
 if __name__ == "__main__":
     unittest.main()
