@@ -2,12 +2,13 @@
 
 import pygame
 
-from board import BOARD_X, BOARD_Y, BOARD_COLS, BOARD_ROWS, CELL_SIZE, TEST_BOARD, draw_board
+from board import BOARD_X, BOARD_Y, BOARD_COLS, BOARD_ROWS, CELL_SIZE, LEVELS, draw_board
 from game_logic import process_arrow_click
 from models import GameState
 from state_logic import (
-    clone_board,
-    restart_game,
+    advance_level,
+    restart_current_level,
+    restart_whole_game,
     state_after_blocked_click,
     state_after_successful_removal,
 )
@@ -20,7 +21,6 @@ BACKGROUND_COLOR = (30, 30, 30)
 TEXT_COLOR = (240, 240, 240)
 BUTTON_COLOR = (70, 110, 170)
 BUTTON_HOVER_COLOR = (90, 140, 210)
-INITIAL_MISTAKES = 3
 COLLISION_FEEDBACK_SECONDS = 0.35
 RESTART_BUTTON_RECT = pygame.Rect(470, 20, 130, 36)
 
@@ -43,9 +43,7 @@ def main():
 
     running = True
     clock = pygame.time.Clock()
-    board = clone_board(TEST_BOARD)
-    remaining_mistakes = INITIAL_MISTAKES
-    game_state = GameState.PLAYING
+    current_level_index, board, remaining_mistakes, game_state = restart_whole_game(LEVELS)
     collision_cell = None
     collision_until = 0
     font = pygame.font.Font(None, 32)
@@ -56,7 +54,16 @@ def main():
                 running = False
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if RESTART_BUTTON_RECT.collidepoint(event.pos):
-                    board, remaining_mistakes, game_state = restart_game(TEST_BOARD)
+                    if game_state == GameState.PASSED and current_level_index == len(LEVELS) - 1:
+                        current_level_index, board, remaining_mistakes, game_state = restart_whole_game(LEVELS)
+                    elif game_state == GameState.PASSED:
+                        current_level_index, board, remaining_mistakes, game_state = advance_level(
+                            LEVELS, current_level_index
+                        )
+                    else:
+                        current_level_index, board, remaining_mistakes, game_state = restart_current_level(
+                            LEVELS, current_level_index
+                        )
                     collision_cell = None
                     collision_until = 0
                 elif game_state == GameState.PLAYING:
@@ -82,14 +89,18 @@ def main():
         if collision_cell is not None and pygame.time.get_ticks() >= collision_until:
             collision_cell = None
         draw_board(screen, board, collision_cell)
+        level_text = f"Level: {current_level_index + 1} / {len(LEVELS)}"
+        level_surface = font.render(level_text, True, TEXT_COLOR)
+        screen.blit(level_surface, (190, 5))
+
         if game_state == GameState.PLAYING:
             status_text = f"Remaining Mistakes: {remaining_mistakes}"
         elif game_state == GameState.PASSED:
-            status_text = "Level Clear!"
+            status_text = "All Levels Clear!" if current_level_index == len(LEVELS) - 1 else "Level Clear!"
         else:
             status_text = "Game Over"
         status = font.render(status_text, True, TEXT_COLOR)
-        screen.blit(status, (190, 25))
+        screen.blit(status, (190, 35))
 
         button_color = (
             BUTTON_HOVER_COLOR
@@ -97,7 +108,13 @@ def main():
             else BUTTON_COLOR
         )
         pygame.draw.rect(screen, button_color, RESTART_BUTTON_RECT, border_radius=5)
-        restart_text = font.render("Restart", True, TEXT_COLOR)
+        if game_state == GameState.PASSED and current_level_index < len(LEVELS) - 1:
+            button_text = "Next Level"
+        elif game_state == GameState.PASSED:
+            button_text = "Restart Game"
+        else:
+            button_text = "Restart"
+        restart_text = font.render(button_text, True, TEXT_COLOR)
         restart_position = restart_text.get_rect(center=RESTART_BUTTON_RECT.center)
         screen.blit(restart_text, restart_position)
         pygame.display.flip()

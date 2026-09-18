@@ -15,7 +15,44 @@ ARROW_COLOR = (80, 190, 255)
 COLLISION_COLOR = (255, 90, 90)
 
 
-TEST_BOARD = [
+# Level 1: 四个朝棋盘外的箭头，适合熟悉基本操作。
+LEVEL_1 = [
+    [Arrow(0, 0, Direction.UP), None, None, None, None, Arrow(0, 5, Direction.RIGHT)],
+    [None, None, None, None, None, None],
+    [None, None, None, None, None, None],
+    [None, None, None, None, None, None],
+    [None, None, None, None, None, None],
+    [Arrow(5, 0, Direction.LEFT), None, None, None, None, Arrow(5, 5, Direction.DOWN)],
+]
+
+# Level 2: 两条横向阻挡链，必须先清除链条末端。
+LEVEL_2 = [
+    [None, None, None, None, None, None],
+    [Arrow(1, 0, Direction.RIGHT), None, Arrow(1, 2, Direction.RIGHT), None, Arrow(1, 4, Direction.RIGHT), None],
+    [None, None, None, None, None, None],
+    [None, Arrow(3, 1, Direction.LEFT), None, Arrow(3, 3, Direction.LEFT), None, Arrow(3, 5, Direction.LEFT)],
+    [None, None, None, None, None, None],
+    [None, None, None, None, None, None],
+]
+
+# Level 3: 三条独立方向链，箭头数量更多但仍有明确的合法顺序。
+LEVEL_3 = [
+    [Arrow(0, 0, Direction.UP), None, None, None, None, None],
+    [Arrow(1, 0, Direction.RIGHT), None, Arrow(1, 2, Direction.RIGHT), None, Arrow(1, 4, Direction.RIGHT), None],
+    [None, None, None, None, None, None],
+    [None, Arrow(3, 1, Direction.LEFT), None, Arrow(3, 3, Direction.LEFT), None, Arrow(3, 5, Direction.LEFT)],
+    [None, None, None, None, None, None],
+    [None, None, None, None, None, Arrow(5, 5, Direction.DOWN)],
+]
+
+
+LEVELS = [LEVEL_1, LEVEL_2, LEVEL_3]
+
+# 保留旧名称，兼容此前代码和文档。
+TEST_BOARD = LEVEL_1
+
+
+OLD_TEST_BOARD = [
     [Arrow(0, 0, Direction.RIGHT), None, None, None, None, Arrow(0, 5, Direction.DOWN)],
     [None, None, None, None, None, None],
     [None, None, Arrow(2, 2, Direction.UP), None, None, None],
