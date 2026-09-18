@@ -13,6 +13,9 @@ from state_logic import (
 
 
 class TestStateLogic(unittest.TestCase):
+    def test_start_state_exists(self):
+        self.assertEqual(GameState.START.value, "start")
+
     def test_clearing_last_arrow_passes_level(self):
         arrow = Arrow(0, 0, Direction.RIGHT)
         board = [[arrow]]

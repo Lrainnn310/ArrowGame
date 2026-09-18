@@ -16,6 +16,7 @@ class Direction(Enum):
 class GameState(Enum):
     """当前单关卡的游戏状态。"""
 
+    START = "start"
     PLAYING = "playing"
     PASSED = "passed"
     FAILED = "failed"
@@ -28,3 +29,12 @@ class Arrow:
     row: int
     col: int
     direction: Direction
+
+
+@dataclass(frozen=True)
+class FlyingArrow:
+    """飞出动画期间保存的临时箭头视觉信息。"""
+
+    arrow: Arrow
+    start_time: int
+    duration: int = 300

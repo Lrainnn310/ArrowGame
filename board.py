@@ -87,10 +87,10 @@ def draw_board(screen, board, collision_cell=None):
                 draw_arrow(screen, arrow, is_collision)
 
 
-def draw_arrow(screen, arrow, is_collision=False):
+def draw_arrow(screen, arrow, is_collision=False, offset=(0, 0)):
     """将箭头绘制在所在格子的中央。"""
-    center_x = BOARD_X + arrow.col * CELL_SIZE + CELL_SIZE // 2
-    center_y = BOARD_Y + arrow.row * CELL_SIZE + CELL_SIZE // 2
+    center_x = BOARD_X + arrow.col * CELL_SIZE + CELL_SIZE // 2 + offset[0]
+    center_y = BOARD_Y + arrow.row * CELL_SIZE + CELL_SIZE // 2 + offset[1]
     half_length = 22
     head_length = 14
     head_width = 13
@@ -138,3 +138,14 @@ def draw_arrow(screen, arrow, is_collision=False):
 
     color = COLLISION_COLOR if is_collision else ARROW_COLOR
     pygame.draw.polygon(screen, color, points)
+
+
+def draw_flying_arrow(screen, flying_arrow, progress):
+    """按 0 到 1 的进度绘制飞出中的箭头。"""
+    offsets = {
+        Direction.UP: (0, -CELL_SIZE * 1.5 * progress),
+        Direction.DOWN: (0, CELL_SIZE * 1.5 * progress),
+        Direction.LEFT: (-CELL_SIZE * 1.5 * progress, 0),
+        Direction.RIGHT: (CELL_SIZE * 1.5 * progress, 0),
+    }
+    draw_arrow(screen, flying_arrow.arrow, offset=offsets[flying_arrow.arrow.direction])
