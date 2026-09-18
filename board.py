@@ -12,17 +12,20 @@ BOARD_X = 190
 BOARD_Y = 70
 GRID_COLOR = (190, 190, 190)
 ARROW_COLOR = (80, 190, 255)
+COLLISION_COLOR = (255, 90, 90)
 
 
-TEST_ARROWS = [
-    Arrow(0, 0, Direction.RIGHT),
-    Arrow(0, 5, Direction.DOWN),
-    Arrow(2, 2, Direction.UP),
-    Arrow(4, 4, Direction.LEFT),
+TEST_BOARD = [
+    [Arrow(0, 0, Direction.RIGHT), None, None, None, None, Arrow(0, 5, Direction.DOWN)],
+    [None, None, None, None, None, None],
+    [None, None, Arrow(2, 2, Direction.UP), None, None, None],
+    [None, None, None, None, None, None],
+    [None, None, None, None, Arrow(4, 4, Direction.LEFT), None],
+    [None, None, None, None, None, None],
 ]
 
 
-def draw_board(screen, arrows):
+def draw_board(screen, board, collision_cell=None):
     """绘制网格及指定位置的箭头。"""
     board_rect = pygame.Rect(
         BOARD_X,
@@ -40,11 +43,14 @@ def draw_board(screen, arrows):
         x = BOARD_X + col * CELL_SIZE
         pygame.draw.line(screen, GRID_COLOR, (x, BOARD_Y), (x, board_rect.bottom), 2)
 
-    for arrow in arrows:
-        draw_arrow(screen, arrow)
+    for row in board:
+        for arrow in row:
+            if arrow is not None:
+                is_collision = collision_cell == (arrow.row, arrow.col)
+                draw_arrow(screen, arrow, is_collision)
 
 
-def draw_arrow(screen, arrow):
+def draw_arrow(screen, arrow, is_collision=False):
     """将箭头绘制在所在格子的中央。"""
     center_x = BOARD_X + arrow.col * CELL_SIZE + CELL_SIZE // 2
     center_y = BOARD_Y + arrow.row * CELL_SIZE + CELL_SIZE // 2
@@ -93,4 +99,5 @@ def draw_arrow(screen, arrow):
             (center_x + half_length - head_length, center_y + head_width),
         ]
 
-    pygame.draw.polygon(screen, ARROW_COLOR, points)
+    color = COLLISION_COLOR if is_collision else ARROW_COLOR
+    pygame.draw.polygon(screen, color, points)
