@@ -16,7 +16,7 @@
 
 ![游戏界面](docs/images/game-screen.png)
 
-### 本关通过
+
 
 ![本关通过](docs/images/level-clear.png)
 
@@ -24,7 +24,7 @@
 
 ![挑战失败](docs/images/game-over.png)
 
-### 全部通关
+
 
 ![全部通关](docs/images/all-clear.png)
 
