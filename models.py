@@ -13,6 +13,14 @@ class Direction(Enum):
     RIGHT = "right"
 
 
+class GameState(Enum):
+    """当前单关卡的游戏状态。"""
+
+    PLAYING = "playing"
+    PASSED = "passed"
+    FAILED = "failed"
+
+
 @dataclass(frozen=True)
 class Arrow:
     """表示棋盘中的一个箭头。"""
