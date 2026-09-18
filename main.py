@@ -2,6 +2,8 @@
 
 import pygame
 
+from board import TEST_ARROWS, draw_board
+
 
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
@@ -24,6 +26,7 @@ def main():
                 running = False
 
         screen.fill(BACKGROUND_COLOR)
+        draw_board(screen, TEST_ARROWS)
         pygame.display.flip()
         clock.tick(60)
 
