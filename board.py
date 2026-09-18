@@ -9,10 +9,10 @@ BOARD_ROWS = 6
 BOARD_COLS = 6
 CELL_SIZE = 70
 BOARD_X = 190
-BOARD_Y = 70
-GRID_COLOR = (190, 190, 190)
-ARROW_COLOR = (80, 190, 255)
-COLLISION_COLOR = (255, 90, 90)
+BOARD_Y = 190
+GRID_COLOR = (220, 205, 230)
+ARROW_COLOR = (255, 130, 190)
+COLLISION_COLOR = (245, 70, 90)
 
 
 # Level 1: 四个朝棋盘外的箭头，适合熟悉基本操作。
@@ -70,7 +70,7 @@ def draw_board(screen, board, collision_cell=None):
         BOARD_COLS * CELL_SIZE,
         BOARD_ROWS * CELL_SIZE,
     )
-    pygame.draw.rect(screen, (45, 45, 45), board_rect)
+    pygame.draw.rect(screen, (255, 255, 255), board_rect, border_radius=18)
 
     for row in range(BOARD_ROWS + 1):
         y = BOARD_Y + row * CELL_SIZE
@@ -136,7 +136,13 @@ def draw_arrow(screen, arrow, is_collision=False, offset=(0, 0)):
             (center_x + half_length - head_length, center_y + head_width),
         ]
 
-    color = COLLISION_COLOR if is_collision else ARROW_COLOR
+    direction_colors = {
+        Direction.UP: (255, 105, 180),
+        Direction.DOWN: (70, 175, 245),
+        Direction.LEFT: (165, 105, 235),
+        Direction.RIGHT: (255, 165, 70),
+    }
+    color = COLLISION_COLOR if is_collision else direction_colors[arrow.direction]
     pygame.draw.polygon(screen, color, points)
 
 

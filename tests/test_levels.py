@@ -11,6 +11,7 @@ from state_logic import (
     restart_current_level,
     restart_whole_game,
     state_after_successful_removal,
+    navigate_level,
 )
 
 
@@ -33,6 +34,20 @@ def clear_level(level_index):
 
 
 class TestLevels(unittest.TestCase):
+    def test_level_navigation_boundaries(self):
+        self.assertIsNone(navigate_level(LEVELS, 0, -1))
+        self.assertIsNone(navigate_level(LEVELS, 2, 1))
+
+    def test_level_navigation_loads_fresh_target_level(self):
+        result = navigate_level(LEVELS, 1, -1)
+        index, board, mistakes, state = result
+        board[0][0] = None
+        self.assertEqual(index, 0)
+        self.assertEqual(mistakes, 3)
+        self.assertEqual(state, GameState.PLAYING)
+        self.assertEqual(board[1], LEVELS[0][1])
+        self.assertNotEqual(board, LEVELS[0])
+
     def test_there_are_three_levels(self):
         self.assertEqual(len(LEVELS), 3)
 

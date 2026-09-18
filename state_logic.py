@@ -34,6 +34,14 @@ def advance_level(levels, current_level_index):
     return next_index, board, INITIAL_MISTAKES, GameState.PLAYING
 
 
+def navigate_level(levels, current_level_index, offset):
+    """按 offset 浏览关卡，并安全处理第一关和最后一关边界。"""
+    target_index = current_level_index + offset
+    if not 0 <= target_index < len(levels):
+        return None
+    return target_index, clone_board(levels[target_index]), INITIAL_MISTAKES, GameState.PLAYING
+
+
 def restart_whole_game(levels):
     """从第一关重新开始整个游戏。"""
     return 0, clone_board(levels[0]), INITIAL_MISTAKES, GameState.PLAYING
